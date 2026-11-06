@@ -1,0 +1,129 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>แผนที่หน่วยบริการ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&family=Prompt:wght@500;600;700&display=swap">
+<style>
+/* Layout: sticky search header + single-column list of unit cards, each with a large "navigate" button */
+:root{
+  --bg:#EEF2F1; --surface:#FFFFFF; --fg:#10211D; --muted:#5B6E69; --line:#DCE5E2;
+  --accent:#0B7A66; --accent-ink:#FFFFFF; --accent-soft:#DDF1EC; --star:#E8A317;
+  --shadow:0 1px 2px rgba(16,33,29,.06),0 6px 18px rgba(16,33,29,.06);
+  --f-display:'Prompt','Noto Sans Thai',system-ui,sans-serif;
+  --f-body:'Noto Sans Thai',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C1614; --surface:#14231F; --fg:#E7F2EF; --muted:#8DA39D; --line:#233733;
+  --accent:#2FC4A5; --accent-ink:#04211A; --accent-soft:#17342E; --star:#F2B93B;
+  --shadow:0 1px 2px rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1614; --surface:#14231F; --fg:#E7F2EF; --muted:#8DA39D; --line:#233733;
+  --accent:#2FC4A5; --accent-ink:#04211A; --accent-soft:#17342E; --star:#F2B93B;
+  --shadow:0 1px 2px rgba(0,0,0,.4);color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 32px;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:720px;margin:0 auto}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:18px 0 12px;
+  display:flex;flex-direction:column;gap:12px}
+.title{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+h1{font:700 22px/1.2 var(--f-display);margin:0;text-wrap:balance}
+.count{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.search{position:relative}
+.search svg{position:absolute;left:14px;top:50%;translate:0 -50%;width:18px;height:18px;color:var(--muted)}
+#q{width:100%;height:48px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--fg);
+  font:inherit;font-size:16px;padding:0 14px 0 42px}
+#q:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;height:36px;padding:0 16px;font:500 14px var(--f-body);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:12px}
+li.card{background:var(--surface);border-radius:20px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px}
+.top{display:flex;gap:12px;align-items:flex-start}
+.idx{flex:none;width:36px;height:36px;border-radius:12px;background:var(--accent-soft);color:var(--accent);
+  font:600 14px var(--f-display);display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.name{flex:1;min-width:0}
+.kicker{font-size:12px;color:var(--muted);letter-spacing:.02em}
+.nm{font:600 18px/1.3 var(--f-display);overflow-wrap:anywhere}
+.star{flex:none;width:40px;height:40px;border-radius:12px;border:0;background:transparent;color:var(--muted);cursor:pointer;display:grid;place-items:center}
+.star svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
+.star[aria-pressed="true"]{color:var(--star)}
+.star[aria-pressed="true"] svg{fill:currentColor}
+.phone{display:flex;align-items:center;gap:8px;color:var(--muted);font-variant-numeric:tabular-nums;font-size:15px}
+.phone svg{width:16px;height:16px;flex:none}
+.phone b{font-weight:500;color:var(--fg);user-select:all;-webkit-user-select:all}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+a.go{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border-radius:14px;
+  background:var(--accent);color:var(--accent-ink);text-decoration:none;font:600 16px var(--f-display)}
+a.go:active{transform:scale(.98)}
+a.go svg{width:20px;height:20px}
+.sec{display:flex;align-items:center;justify-content:center;gap:8px;height:44px;border-radius:12px;border:1px solid var(--line);
+  background:transparent;color:var(--fg);font:500 14px var(--f-body);text-decoration:none;cursor:pointer}
+.sec svg{width:16px;height:16px}
+.sec[aria-disabled="true"]{opacity:.4;pointer-events:none}
+.empty{text-align:center;color:var(--muted);padding:48px 0}
+.toast{position:fixed;left:50%;translate:-50% 0;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);
+  padding:10px 16px;border-radius:12px;font-size:14px;z-index:20}
+@media (prefers-reduced-motion:no-preference){a.go{transition:transform .1s}}
+</style>
+<div class="wrap">
+<header>
+  <div class="title"><h1>แผนที่หน่วยบริการ</h1><span class="count" id="count"></span></div>
+  <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+  <input id="q" type="search" placeholder="ค้นหาชื่อหน่วย หรือเบอร์โทร" autocomplete="off" aria-label="ค้นหา"></label>
+  <div class="chips"><button class="chip" id="all" aria-pressed="true">ทั้งหมด</button><button class="chip" id="fav" aria-pressed="false">รายการโปรด</button></div>
+</header>
+<ul id="list"></ul>
+<p class="empty" id="empty" hidden>ไม่พบหน่วยบริการที่ค้นหา</p>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script>
+const DATA=[{"name": "หน่วยบริการแก้งสนามนาง", "phone": "0612278111", "map": "https://maps.google.com/maps?q=15.74759,102.254334", "photo": "1n-gVv59wv3TteXUCKi60oEd6XdDILCyS"}, {"name": "หน่วยบริการขามทะเลสอ", "phone": "0933491939", "map": "https://maps.app.goo.gl/SSogdD2ZjUDk2NMNA", "photo": "1Kq_J3rqk4y0_CCjIcy1GK5jN0qz5J-v9"}, {"name": "หน่วยบริการขามสะแกแสง", "phone": "090-6923553", "map": "https://maps.app.goo.gl/UzrwqQESe5BRVEF1A", "photo": "1myBK2H71L_-R2PHTxNKueOTwQKHr2Eoh"}, {"name": "หน่วยบริการคง", "phone": "0803655208", "map": "https://maps.app.goo.gl/6oF43jDrBUf5P5ga7", "photo": "13UJZm42OWAf2QFoh1mNNEHBMSOD5CN87"}, {"name": "หน่วยบริการคง 2 (ตาจั่น)", "phone": "0610936144", "map": "https://maps.app.goo.gl/f5z9bbSPnciQwMeK8", "photo": "1rOWafSCF_mjGgjD4yacNj8ibyUwmzwgq"}, {"name": "หน่วยบริการครบุรี", "phone": "0801513143", "map": "https://maps.app.goo.gl/6pKt5gpAfMwpj2tRA?g_st=ipc", "photo": "1UgbNtfaJis85qJUOohz4BSDvgivU27aB"}, {"name": "หน่วยบริการจักราช", "phone": "098-6573100", "map": "https://maps.app.goo.gl/zAx8iJx8cjeHK1Lh7", "photo": "156zyqgS6bEyaRzTcV_Tv8PnBCVxo3RQT"}, {"name": "หน่วยบริการเฉลิมพระเกียรติ", "phone": "0910200156", "map": "https://maps.app.goo.gl/RZdfQgBkikQEwGFt8", "photo": ""}, {"name": "หน่วยบริการชุมพวง", "phone": "0826594952", "map": "https://maps.app.goo.gl/mx5RPqXZXw9Xao13A?g_st=ic", "photo": "1o38XKiBhWL8RBbqtr2Rv7Xn5Zf_ozoUr"}, {"name": "หน่วยบริการโชคชัย", "phone": "085-7628168", "map": "https://maps.app.goo.gl/mQpG9tzYbTXY4ZzB7", "photo": "1VZCo7v1-2PRHHWifm390iGtIppo1oKxV"}, {"name": "หน่วยบริการด่านขุนทด", "phone": "0610987566", "map": "https://maps.app.goo.gl/cU2qVYi7m54XZyf4A", "photo": "1gDfXT9S7CGkPXpsA9bSwra0s-Y6mjAWp"}, {"name": "หน่วยบริการด่านขุนทด 2 (ห้วยบง)", "phone": "0926958229", "map": "https://maps.app.goo.gl/KXpwf7Ga55fgXRaj9?g_st=ac", "photo": "18xyLZ7uTwMU7emxrBee1Ji8BRlYhyrrY"}, {"name": "หน่วยบริการเทพารักษ์", "phone": "0888859125", "map": "https://maps.app.goo.gl/oLtxC638R2UuXtMs6", "photo": "1P7myuMTfoWyzMih4etf7SwGmXpwe21Dx"}, {"name": "หน่วยบริการโนนแดง", "phone": "088-7429589", "map": "https://maps.app.goo.gl/hcT4LAF416N7BdhQ7?g_st=ic", "photo": "1b8aEF1C1D9NRRP5VA8K2UK4y5ZEilRVD"}, {"name": "หน่วยบริการโนนไทย", "phone": "0852210629", "map": "https://maps.app.goo.gl/dn1c58aVToNVcEy86?g_st=il", "photo": "1oDMTe294gSAsXIqS7v-wDrJ1mPte2372"}, {"name": "หน่วยบริการโนนสูง", "phone": "0801710139", "map": "https://maps.app.goo.gl/NsohM7ebDHt5y4pE6", "photo": "1nQWs3_SjB0aMiLP5X0-KAgZVXRA6sTDa"}, {"name": "หน่วยบริการบัวลาย", "phone": "0986934825", "map": "https://maps.app.goo.gl/rsigeyqz7VMK42Jr5?g_st=al", "photo": "1CHTzRRvplMshJ6nWQa5oj9mX8OkoBvDS"}, {"name": "หน่วยบริการบัวใหญ่", "phone": "0883363365", "map": "https://maps.app.goo.gl/6YLc7aSucJoqpn9k6", "photo": "1puLsxxXXoECjasrcKk5zxQIZ0ZcJFT1K"}, {"name": "หน่วยบริการบ้านเหลื่อม", "phone": "0840969218", "map": "https://maps.app.goo.gl/xgawFyMyiYzbhmUv9", "photo": "19NhJfDiUUDceRwVSEVDNeYWwN3yd42-f"}, {"name": "หน่วยบริการประทาย", "phone": "0888995936", "map": "https://maps.app.goo.gl/PF8qQGgTxUnQiPwdA?g_st=ic", "photo": "14S1M7F28fOMGxL9Oh8mRwWUr9nxuzAlN"}, {"name": "หน่วยบริการปักธงชัย", "phone": "085-7750921", "map": "https://maps.app.goo.gl/BrjPiZPySZ7X1iez6", "photo": ""}, {"name": "หน่วยบริการปากช่อง", "phone": "0615596987", "map": "https://maps.app.goo.gl/E5vuMmMMoRbqnpTJ6?g_st=ic", "photo": "16tr2y7bqyFvQvRA_jY00pVFdDbOH3I7v"}, {"name": "หน่วยบริการปากช่อง 2 (กลางดง)", "phone": "0834511141", "map": "https://maps.app.goo.gl/QgG4RJTLoci1ttAf7?g_st=ic", "photo": "1Ff9JScySmXTFIKm81CXd0yw2LYrtV5KI"}, {"name": "หน่วยบริการพระทองคำ", "phone": "0887663646", "map": "https://maps.app.goo.gl/om5VTLwTpzXZDsjW6", "photo": "1Y3f5B6KTkkyuWMiCsqHLZm_lhCAyEaL3"}, {"name": "หน่วยบริการพิมาย", "phone": "0830182801", "map": "https://maps.app.goo.gl/sAAYoVKSe17ZTfbM9?g_st=ic", "photo": "13Hli7IE2UVdhvMKvvlecsxoUY8zkuOxQ"}, {"name": "หน่วยบริการเมืองนครราชสีมา", "phone": "0936159887", "map": "https://maps.app.goo.gl/bQmStDNVem5VFMEi6", "photo": "1ucol6HuoJ4ST7_Yn0lLFZzvNhcKyxFmO"}, {"name": "หน่วยบริการเมืองยาง", "phone": "0828650511", "map": "https://maps.app.goo.gl/56gfNZrNDDPi88786", "photo": "17J57oFwMRlrkNY20sTe9ZAN7U1tt-HjM"}, {"name": "หน่วยบริการลำทะเมนชัย", "phone": "0981080800", "map": "https://maps.app.goo.gl/Vnxr2BZUTeu52y7F7?g_st=al", "photo": "13WDuxz2LZLQZs3fHbtG7XyXRNIUkxH-T"}, {"name": "หน่วยบริการวังน้ำเขียว", "phone": "088-512-5705", "map": "https://maps.app.goo.gl/ekAHP5ePyfBgzSnx9?g_st=ic", "photo": "1jxKNJ7pLiRBbKUlBXILCIQ6NAEqwn-Tg"}, {"name": "หน่วยบริการสีคิ้ว", "phone": "0807973757", "map": "https://maps.app.goo.gl/VLxiDNc7U8tNBasv7?g_st=com.google.maps.preview.copy", "photo": "1Qnug7NjxsTxtMLSEsFivaCfTD7pefGu_"}, {"name": "หน่วยบริการสีคิ้ว 2 (ภูกระโดน)", "phone": "0879478262", "map": "https://maps.app.goo.gl/opXe9yN276B7nbUe8", "photo": "1bHcEnj62faBHVXqlYsBc_R0NH5rKfkVo"}, {"name": "หน่วยบริการสีดา", "phone": "0643160529", "map": "https://maps.app.goo.gl/gDcCE5VLdidMW8bu6", "photo": "1eSXUviy2_-zi-Hmci1JTd8Q_ND-n7qZn"}, {"name": "หน่วยบริการสูงเนิน", "phone": "0623246993", "map": "https://maps.app.goo.gl/wcWKaLTcQKRvRr8m7?g_st=il", "photo": "1wy9-YV9I8in7YK-jBGUSEnX78cUtoioQ"}, {"name": "หน่วยบริการเสิงสาง", "phone": "0935677494", "map": "https://maps.app.goo.gl/EDhvYjRvTExwvde76", "photo": "152Fd62IG3ZEdATyb1JQACbM1LcvxIibA"}, {"name": "หน่วยบริการหนองบุญมาก", "phone": "0827467967", "map": "https://maps.app.goo.gl/uW3YT4H46nUsDpX27", "photo": "1X84n8Y36NnLSxuyW0Pd-T9sSiH0Jr4My"}, {"name": "หน่วยบริการห้วยแถลง", "phone": "0935704490", "map": "https://maps.app.goo.gl/8mogNFHMiacYE7H87", "photo": "1UfuSOj_yL9qIZEx499skKtxWLkaWKF65"}];
+const $=s=>document.querySelector(s);
+let favs=new Set();
+try{favs=new Set(JSON.parse(localStorage.getItem('favs')||'[]'))}catch(e){}
+const save=()=>{try{localStorage.setItem('favs',JSON.stringify([...favs]))}catch(e){}};
+let onlyFav=false;
+const norm=s=>s.replace(/[\s-]/g,'');
+const items=DATA.map((d,i)=>{
+  const m=d.name.match(/^หน่วยบริการ\s*(.*)$/);
+  return {...d,i:i+1,short:m?m[1]:d.name,prefix:m?'หน่วยบริการ':'',digits:norm(d.phone)};
+});
+const ICON={
+ nav:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 4.5 20.5 12 17l7.5 3.5z"/></svg>',
+ cam:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M9 6l1.5-2h3L15 6"/></svg>',
+ copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg>',
+ tel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
+ star:'<svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.8 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.3l1.1-6.2L3 9.7l6.2-.9z" stroke-linejoin="round"/></svg>'
+};
+function render(){
+  const q=norm($('#q').value.toLowerCase());
+  const rows=items.filter(d=>(!onlyFav||favs.has(d.i))&&(!q||norm(d.name.toLowerCase()).includes(q)||d.digits.includes(q)));
+  $('#count').textContent=rows.length+' / '+items.length+' หน่วย';
+  $('#empty').hidden=rows.length>0;
+  $('#list').innerHTML=rows.map(d=>{
+    const ph=d.phone.replace(/[^\d-]/g,'');
+    const fav=favs.has(d.i);
+    return `<li class="card"><div class="top"><div class="idx">${d.i}</div>
+      <div class="name"><div class="kicker">${d.prefix||'&nbsp;'}</div><div class="nm">${d.short}</div></div>
+      <button class="star" data-fav="${d.i}" aria-pressed="${fav}" aria-label="รายการโปรด ${d.short}">${ICON.star}</button></div>
+      <div class="phone">${ICON.tel}<b>${ph||'ไม่มีเบอร์โทร'}</b></div>
+      <div class="actions">
+        <a class="go" href="${d.map}" target="_blank" rel="noopener">${ICON.nav}นำทางด้วย Google Maps</a>
+        <a class="sec" ${ph?`href="tel:${d.digits}"`:'aria-disabled="true"'}>${ICON.tel}โทร</a>
+        <a class="sec" ${d.photo?`href="https://drive.google.com/open?id=${d.photo}" target="_blank" rel="noopener"`:'aria-disabled="true"'}>${ICON.cam}รูปหน้าหน่วย</a>
+      </div></li>`}).join('');
+}
+function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,1600)}
+$('#q').addEventListener('input',render);
+$('#all').onclick=()=>{onlyFav=false;$('#all').setAttribute('aria-pressed','true');$('#fav').setAttribute('aria-pressed','false');render()};
+$('#fav').onclick=()=>{onlyFav=true;$('#fav').setAttribute('aria-pressed','true');$('#all').setAttribute('aria-pressed','false');render()};
+$('#list').addEventListener('click',e=>{
+  const b=e.target.closest('[data-fav]');if(!b)return;
+  const id=+b.dataset.fav;favs.has(id)?favs.delete(id):favs.add(id);save();render();
+});
+render();
+</script>
+
+</body></html>
